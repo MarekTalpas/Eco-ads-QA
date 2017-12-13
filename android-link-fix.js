@@ -21,18 +21,9 @@
     function replaceAll(str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
     }
-    
-    function getEcoOpenHack() {
-        var ecoOpenString = String(eco.open);
-        var ecoOpenWithoutInternal = replaceAll(ecoOpenString, 'internal-', '');
-        var ecoOpenHack = eval('(' + ecoOpenWithoutInternal + ')');
-        console.log('ecoOpenHack: ', ecoOpenHack);
-        return ecoOpenHack;
-    }
 
     function setEcoOpenHack() {
         if (eco.open && isAndroid()) {
-            var ecoOpenHack = getEcoOpenHack();
             var allElements = document.getElementsByTagName('*');
             var firstSplitString = 'onclick(event) {';
             var firstSplitStringLength = firstSplitString.length;
@@ -49,16 +40,18 @@
                     var beforeEcoOpen = String(allElements[i].onclick).substring(firstBreakpointNumber, secondBreakpointNumber);
                     var afterEcoOpen = String(allElements[i].onclick).substring(thirdBreakpointNumber + link.length + 1, endBreakpointNumber);
         
-                    console.log('afterEcoOpen: ', beforeEcoOpen + "ecoOpenHack(" + link + ')' + afterEcoOpen);
-            
                     allElements[i].setAttribute("onClick", beforeEcoOpen + "ecoOpenHack(" + link + ')' + afterEcoOpen);
                 }
             }
         }
     }
     
-    removeInternalPrefixFromLinks();
-    setEcoOpenHack();
+    function init() {
+        removeInternalPrefixFromLinks();
+        setEcoOpenHack();
+    }
+
+    document.addEventListener('DOMContentLoaded', init, false);
 
 }());
 
